@@ -1,0 +1,84 @@
+{
+  "path": "/home/runner/work/deno/deno/research/btc_volume_delta_android/cache/BTCUSDT/BTCUSDT_4h.parquet",
+  "shape": [
+    14712,
+    12
+  ],
+  "columns": [
+    "open_time",
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "close_time",
+    "quote_volume",
+    "count",
+    "taker_buy_volume",
+    "taker_buy_quote_volume",
+    "ignore"
+  ],
+  "dtypes": {
+    "open_time": "datetime64[ns]",
+    "open": "str",
+    "high": "str",
+    "low": "str",
+    "close": "str",
+    "volume": "str",
+    "close_time": "datetime64[ns]",
+    "quote_volume": "str",
+    "count": "str",
+    "taker_buy_volume": "str",
+    "taker_buy_quote_volume": "str",
+    "ignore": "str"
+  },
+  "raw_min_open_time": "2020-01-01 00:00:00+00:00",
+  "raw_max_open_time": "2026-09-17 20:00:00+00:00",
+  "raw_head_open_time": [
+    "2020-01-01 00:00:00+00:00",
+    "2020-01-01 04:00:00+00:00",
+    "2020-01-01 08:00:00+00:00",
+    "2020-01-01 12:00:00+00:00",
+    "2020-01-01 16:00:00+00:00"
+  ],
+  "raw_head_values": [
+    {
+      "open_time": "2020-01-01 00:00:00",
+      "open": "7189.43",
+      "close": "7221.65",
+      "volume": "12055.759",
+      "taker_buy_volume": "6356.286"
+    },
+    {
+      "open_time": "2020-01-01 04:00:00",
+      "open": "7221.80",
+      "close": "7205.26",
+      "volume": "5738.351",
+      "taker_buy_volume": "2855.460"
+    },
+    {
+      "open_time": "2020-01-01 08:00:00",
+      "open": "7205.26",
+      "close": "7192.65",
+      "volume": "10036.293",
+      "taker_buy_volume": "4823.628"
+    },
+    {
+      "open_time": "2020-01-01 12:00:00",
+      "open": "7192.74",
+      "close": "7229.49",
+      "volume": "11010.528",
+      "taker_buy_volume": "5956.600"
+    },
+    {
+      "open_time": "2020-01-01 16:00:00",
+      "open": "7229.66",
+      "close": "7226.35",
+      "volume": "7787.862",
+      "taker_buy_volume": "4104.195"
+    }
+  ],
+  "numeric_volume_nonnull": 14712,
+  "numeric_taker_nonnull": 14712,
+  "reindex_nonnull_open": 5946
+}
