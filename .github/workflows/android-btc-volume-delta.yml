@@ -35,9 +35,12 @@ jobs:
           python-version: "3.13"
 
       - name: Install research dependencies
+        env:
+          PIP_DISABLE_PIP_VERSION_CHECK: "1"
+          PIP_DEFAULT_TIMEOUT: "90"
         run: |
           python -m pip install --upgrade pip
-          python -m pip install "vectorbt==1.1.0" "pyarrow>=19,<24" "huggingface_hub>=0.30" "scipy>=1.14"
+          python -m pip install --only-binary=:all: "vectorbt==1.1.0" "pyarrow>=19,<24" "huggingface_hub>=0.30" "scipy>=1.14,<2"
 
       - name: Run real-data OOS research
         env:
