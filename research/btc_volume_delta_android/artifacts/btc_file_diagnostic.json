@@ -80,5 +80,18 @@
   ],
   "numeric_volume_nonnull": 14712,
   "numeric_taker_nonnull": 14712,
-  "reindex_nonnull_open": 5946
+  "reindex_nonnull_open": 5946,
+  "reindex_nonnull_volume": 5946,
+  "reindex_nonnull_taker": 5946,
+  "panel_nonnull_open": 5946,
+  "panel_nonnull_volume": 5946,
+  "panel_nonnull_taker": 5946,
+  "panel_delta_nonnull": 5946,
+  "panel_delta_head": [
+    -0.0015664307854762478,
+    -0.021626482551886657,
+    -0.03438106849519255,
+    0.022234568739708548,
+    0.06720777333669926
+  ]
 }
