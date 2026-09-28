@@ -191,7 +191,7 @@ def main():
     opens={}; closes={}; vols={}; buys={}; loaded=[]
     for path in paths:
         s=path.parent.name
-        if not s.endswith("USDT") or is_excluded(s): continue
+        if not s.endswith("USDT") or (s != "BTCUSDT" and is_excluded(s)): continue
         try:
             df=pd.read_parquet(path,columns=["open_time","open","close","volume","taker_buy_volume"])
             df["open_time"]=pd.to_datetime(df["open_time"],utc=True)
