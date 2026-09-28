@@ -225,6 +225,21 @@ def main():
     if len(vals): rt.loc[valid]=np.roll(vals,min(777,len(vals)-1))
     pp_rt=predictive(rt,op[alt],cl[alt],low,high,1.0,-1.0,"random_time")
 
+    diagnostics={
+        "loaded_symbols":len(loaded),
+        "btc_delta_fraction_finite":int(delta.notna().sum()),
+        "btc_z_finite":int(z.notna().sum()),
+        "btc_z_oos_finite":int(z.loc[HOLDOUT:].notna().sum()),
+        "btc_z_oos_positive_ge_1":int((z.loc[HOLDOUT:]>=1.0).sum()),
+        "btc_z_oos_negative_le_minus_1":int((z.loc[HOLDOUT:]<=-1.0).sum()),
+        "low_mask_oos_true_cells":int(low.loc[HOLDOUT:].sum().sum()),
+        "low_mask_oos_active_symbols":int(low.loc[HOLDOUT:].any(axis=0).sum()),
+        "high_mask_oos_true_cells":int(high.loc[HOLDOUT:].sum().sum()),
+        "pp_rows":pp[["horizon_bars","liquidity","signal_side","n_symbol_day","n_dates"]].to_dict("records"),
+    }
+    (ART/"diagnostics_pre_gate.json").write_text(json.dumps(diagnostics,indent=2))
+    print(json.dumps({"stage":"pre_gate_diagnostics",**diagnostics},indent=2),flush=True)
+
     gate=pp[(pp.liquidity=="low_liquidity")&pp.signal_side.isin(["positive","negative"])]
     counts=gate.groupby("horizon_bars").n_symbol_day.sum()
     if counts.empty or int(counts.min())<GATE:
