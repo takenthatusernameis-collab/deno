@@ -45,7 +45,6 @@ jobs:
       - name: Run real-data OOS research
         env:
           PYTHONUNBUFFERED: "1"
-          BTC_ONLY_DIAGNOSTIC: "1"
         run: python research/btc_volume_delta_android/run.py
 
       - name: Print compact result
