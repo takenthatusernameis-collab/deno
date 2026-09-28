@@ -200,8 +200,24 @@ def main():
             "raw_head_values":raw[["open_time","open","close","volume","taker_buy_volume"]].head(5).astype(str).to_dict("records"),
             "numeric_volume_nonnull":int(pd.to_numeric(raw["volume"],errors="coerce").notna().sum()),
             "numeric_taker_nonnull":int(pd.to_numeric(raw["taker_buy_volume"],errors="coerce").notna().sum()),
-            "reindex_nonnull_open":int(pd.to_numeric(raw["open"],errors="coerce").set_axis(raw_idx).reindex(pd.date_range(START,END,freq=FREQ,inclusive="left")).notna().sum()),
+            "reindex_nonnull_open":int(pd.to_numeric(raw["open"],errors="coerce").set_axis(raw_idx).reindex(idx).notna().sum()),
+            "reindex_nonnull_volume":int(pd.to_numeric(raw["volume"],errors="coerce").set_axis(raw_idx).reindex(idx).notna().sum()),
+            "reindex_nonnull_taker":int(pd.to_numeric(raw["taker_buy_volume"],errors="coerce").set_axis(raw_idx).reindex(idx).notna().sum()),
         }
+        otest={"BTCUSDT":pd.to_numeric(raw["open"],errors="coerce").set_axis(raw_idx).reindex(idx)}
+        vtest={"BTCUSDT":pd.to_numeric(raw["volume"],errors="coerce").set_axis(raw_idx).reindex(idx)}
+        btest={"BTCUSDT":pd.to_numeric(raw["taker_buy_volume"],errors="coerce").set_axis(raw_idx).reindex(idx)}
+        op_test=pd.DataFrame(otest,index=idx)
+        vol_test=pd.DataFrame(vtest,index=idx)
+        buy_test=pd.DataFrame(btest,index=idx)
+        delta_test=(2*buy_test["BTCUSDT"]-vol_test["BTCUSDT"])/vol_test["BTCUSDT"].replace(0,np.nan)
+        diag.update({
+            "panel_nonnull_open":int(op_test["BTCUSDT"].notna().sum()),
+            "panel_nonnull_volume":int(vol_test["BTCUSDT"].notna().sum()),
+            "panel_nonnull_taker":int(buy_test["BTCUSDT"].notna().sum()),
+            "panel_delta_nonnull":int(delta_test.notna().sum()),
+            "panel_delta_head":delta_test.dropna().head(5).tolist(),
+        })
         (ART/"btc_file_diagnostic.json").write_text(json.dumps(diag,indent=2))
         print(json.dumps(diag,indent=2),flush=True)
         return
