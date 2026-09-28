@@ -310,7 +310,25 @@ def main():
         _,_,_,low_t,high_t=masks(cl[alt],vol[alt],tail,0.30)
         robust.append(predictive(z,op[alt],cl[alt],low_t,high_t,1.0,-1.0,"btc_delta").assign(
             robustness_dimension="low_liquidity_tail",robustness_value=tail))
-    pp_all=pd.concat([pp,pp_ret,pp_sh,pp_rt],ignore_index=True)
+    baseline_rows=[]
+    for h in HORIZONS:
+        fw=fwd_ret(op[alt],cl[alt],h)
+        for lname,mask in (("low_liquidity",low),("high_liquidity",high)):
+            d=cs_mean(fw,mask)
+            if len(d):
+                pooled=fw.where(mask).loc[d.index]
+                baseline_rows.append({
+                    "control":"unconditional","horizon_bars":h,"liquidity":lname,
+                    "signal_side":"unconditional","n_symbol_day":int(pooled.count().sum()),
+                    "n_dates":int(len(d)),"distinct_symbols":int(pooled.notna().any(axis=0).sum()),
+                    "mean_forward_return":float(d.mean()),
+                    "median_forward_return":float(d.median()),
+                    "std_forward_return":float(d.std(ddof=1)) if len(d)>1 else np.nan,
+                    "hit_rate":float((d>0).mean()),
+                    "hac_t":np.nan,"hac_p":np.nan})
+    pp_baseline=pd.DataFrame(baseline_rows)
+
+    pp_all=pd.concat([pp,pp_ret,pp_sh,pp_rt,pp_baseline],ignore_index=True)
     rob=pd.concat(robust,ignore_index=True)
 
     oos=idx>=HOLDOUT
