@@ -1,0 +1,181 @@
+{
+  "loaded_symbols": 2072,
+  "btc_delta_fraction_finite": 0,
+  "btc_z_finite": 0,
+  "btc_z_oos_finite": 0,
+  "btc_z_oos_positive_ge_1": 0,
+  "btc_z_oos_negative_le_minus_1": 0,
+  "low_mask_oos_true_cells": 0,
+  "low_mask_oos_active_symbols": 0,
+  "high_mask_oos_true_cells": 0,
+  "pp_rows": [
+    {
+      "horizon_bars": 1,
+      "liquidity": "low_liquidity",
+      "signal_side": "positive",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 1,
+      "liquidity": "low_liquidity",
+      "signal_side": "negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 1,
+      "liquidity": "low_liquidity",
+      "signal_side": "positive_minus_negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 1,
+      "liquidity": "high_liquidity",
+      "signal_side": "positive",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 1,
+      "liquidity": "high_liquidity",
+      "signal_side": "negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 1,
+      "liquidity": "high_liquidity",
+      "signal_side": "positive_minus_negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 4,
+      "liquidity": "low_liquidity",
+      "signal_side": "positive",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 4,
+      "liquidity": "low_liquidity",
+      "signal_side": "negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 4,
+      "liquidity": "low_liquidity",
+      "signal_side": "positive_minus_negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 4,
+      "liquidity": "high_liquidity",
+      "signal_side": "positive",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 4,
+      "liquidity": "high_liquidity",
+      "signal_side": "negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 4,
+      "liquidity": "high_liquidity",
+      "signal_side": "positive_minus_negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 6,
+      "liquidity": "low_liquidity",
+      "signal_side": "positive",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 6,
+      "liquidity": "low_liquidity",
+      "signal_side": "negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 6,
+      "liquidity": "low_liquidity",
+      "signal_side": "positive_minus_negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 6,
+      "liquidity": "high_liquidity",
+      "signal_side": "positive",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 6,
+      "liquidity": "high_liquidity",
+      "signal_side": "negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 6,
+      "liquidity": "high_liquidity",
+      "signal_side": "positive_minus_negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 12,
+      "liquidity": "low_liquidity",
+      "signal_side": "positive",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 12,
+      "liquidity": "low_liquidity",
+      "signal_side": "negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 12,
+      "liquidity": "low_liquidity",
+      "signal_side": "positive_minus_negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 12,
+      "liquidity": "high_liquidity",
+      "signal_side": "positive",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 12,
+      "liquidity": "high_liquidity",
+      "signal_side": "negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    },
+    {
+      "horizon_bars": 12,
+      "liquidity": "high_liquidity",
+      "signal_side": "positive_minus_negative",
+      "n_symbol_day": 0,
+      "n_dates": 0
+    }
+  ]
+}
