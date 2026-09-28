@@ -1,0 +1,1 @@
+Android-triggered execution marker. The research workflow is intentionally scoped to this branch.
