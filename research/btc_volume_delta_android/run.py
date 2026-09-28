@@ -181,11 +181,30 @@ def main():
     four_h=sorted([p for p in files if re.match(r"^[^/]+/[^/]+_4h\.parquet$",p)])
     log.append({"stage":"discover","revision":revision,"four_h_files":len(four_h)})
     print(json.dumps(log[-1]),flush=True)
+    diagnostic_only=os.getenv("BTC_ONLY_DIAGNOSTIC")=="1"
+    patterns=["BTCUSDT/BTCUSDT_4h.parquet"] if diagnostic_only else ["*/*_4h.parquet"]
     snapshot=snapshot_download(repo_id=HF_REPO,repo_type="dataset",revision=revision,
-                               allow_patterns=["*/*_4h.parquet"],local_dir=str(CACHE),max_workers=8)
+                               allow_patterns=patterns,local_dir=str(CACHE),max_workers=8)
     paths=sorted(Path(snapshot).glob("*/*_4h.parquet"))
-    log.append({"stage":"download","files_downloaded":len(paths)})
+    log.append({"stage":"download","files_downloaded":len(paths),"diagnostic_only":diagnostic_only})
     print(json.dumps(log[-1]),flush=True)
+    if diagnostic_only:
+        p=Path(snapshot)/"BTCUSDT/BTCUSDT_4h.parquet"
+        raw=pd.read_parquet(p)
+        raw_idx=pd.to_datetime(raw["open_time"],utc=True)
+        diag={
+            "path":str(p),"shape":[int(x) for x in raw.shape],
+            "columns":list(raw.columns),"dtypes":{c:str(raw[c].dtype) for c in raw.columns},
+            "raw_min_open_time":str(raw_idx.min()),"raw_max_open_time":str(raw_idx.max()),
+            "raw_head_open_time":[str(x) for x in raw_idx.head(5)],
+            "raw_head_values":raw[["open_time","open","close","volume","taker_buy_volume"]].head(5).astype(str).to_dict("records"),
+            "numeric_volume_nonnull":int(pd.to_numeric(raw["volume"],errors="coerce").notna().sum()),
+            "numeric_taker_nonnull":int(pd.to_numeric(raw["taker_buy_volume"],errors="coerce").notna().sum()),
+            "reindex_nonnull_open":int(pd.to_numeric(raw["open"],errors="coerce").set_axis(raw_idx).reindex(pd.date_range(START,END,freq=FREQ,inclusive="left")).notna().sum()),
+        }
+        (ART/"btc_file_diagnostic.json").write_text(json.dumps(diag,indent=2))
+        print(json.dumps(diag,indent=2),flush=True)
+        return
 
     idx=pd.date_range(START,END,freq=FREQ,inclusive="left")
     opens={}; closes={}; vols={}; buys={}; loaded=[]
