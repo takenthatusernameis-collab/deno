@@ -87,9 +87,11 @@ def predictive(feature,op,cl,low,high,pos_cut,neg_cut,name):
         fw=fwd_ret(op,cl,h)
         for lname,mask in (("low_liquidity",low),("high_liquidity",high)):
             d=cs_mean(fw,mask)
-            sig=feature.reindex(d.index)
+            sig_raw=feature.reindex(d.index)
+            sig=pd.Series(np.asarray(sig_raw).reshape(-1),index=d.index,dtype=float)
             for side,cond in (("positive",sig>=pos_cut),("negative",sig<=neg_cut)):
-                y=d.loc[cond.fillna(False)].dropna()
+                cond_1d=pd.Series(np.asarray(cond).reshape(-1),index=d.index,dtype=bool)
+                y=d.loc[cond_1d].dropna()
                 t,p=hac_mean_test(y.values)
                 pooled=fw.where(mask).loc[y.index]
                 rows.append({
@@ -101,8 +103,10 @@ def predictive(feature,op,cl,low,high,pos_cut,neg_cut,name):
                     "std_forward_return":float(y.std(ddof=1)) if len(y)>1 else np.nan,
                     "hit_rate":float((y>0).mean()) if len(y) else np.nan,
                     "hac_t":t,"hac_p":p})
-            pos=d.loc[(sig>=pos_cut).fillna(False)].dropna()
-            neg=d.loc[(sig<=neg_cut).fillna(False)].dropna()
+            pos_mask=pd.Series(np.asarray(sig>=pos_cut).reshape(-1),index=d.index,dtype=bool)
+            neg_mask=pd.Series(np.asarray(sig<=neg_cut).reshape(-1),index=d.index,dtype=bool)
+            pos=d.loc[pos_mask].dropna()
+            neg=d.loc[neg_mask].dropna()
             idx=pos.index.union(neg.index)
             pooled=fw.where(mask).loc[idx]
             rows.append({
@@ -120,9 +124,10 @@ def per_symbol(feature,op,cl,low):
     for h in HORIZONS:
         fw=fwd_ret(op,cl,h).loc[HOLDOUT:]
         for s in fw.columns:
-            y=fw[s].where(low[s].loc[HOLDOUT:].fillna(False))
-            p=y.where(feature>=1).dropna()
-            n=y.where(feature<=-1).dropna()
+            y=fw[s].loc[low[s].loc[HOLDOUT:].fillna(False)]
+            f=pd.Series(np.asarray(feature.reindex(y.index)).reshape(-1),index=y.index,dtype=float)
+            p=y.loc[(f>=1).fillna(False)].dropna()
+            n=y.loc[(f<=-1).fillna(False)].dropna()
             if len(p) and len(n):
                 rows.append({"symbol":s,"horizon_bars":h,"n_positive":len(p),"n_negative":len(n),
                              "positive_mean":float(p.mean()),"negative_mean":float(n.mean()),
