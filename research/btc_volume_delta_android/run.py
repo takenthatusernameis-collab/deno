@@ -229,10 +229,13 @@ def main():
         return
 
     idx=pd.date_range(START,END,freq=FREQ,inclusive="left")
-    opens={}; closes={}; vols={}; buys={}; loaded=[]
+    opens={}; closes={}; vols={}; buys={}; loaded=[]; duplicate_symbols=[]
     for path in paths:
         s=path.parent.name
         if not s.endswith("USDT") or (s != "BTCUSDT" and is_excluded(s)): continue
+        if s in opens:
+            duplicate_symbols.append(s)
+            continue
         try:
             df=pd.read_parquet(path,columns=["open_time","open","close","volume","taker_buy_volume"])
             df["open_time"]=pd.to_datetime(df["open_time"],utc=True)
@@ -245,6 +248,7 @@ def main():
             loaded.append(s)
         except Exception as e:
             log.append({"stage":"load_warning","symbol":s,"error":repr(e)})
+    loaded=list(opens.keys())
     if "BTCUSDT" not in loaded: raise RuntimeError("BTCUSDT unavailable")
     op=pd.DataFrame(
         np.column_stack([opens[s].to_numpy(copy=False) for s in loaded]),
@@ -262,7 +266,7 @@ def main():
         np.column_stack([buys[s].to_numpy(copy=False) for s in loaded]),
         index=idx, columns=loaded,
     )
-    log.append({"stage":"load","loaded_symbols":len(loaded)})
+    log.append({"stage":"load","loaded_symbols":len(loaded),"duplicate_symbol_files":sorted(set(duplicate_symbols)),"duplicate_symbol_file_count":len(duplicate_symbols)})
     print(json.dumps(log[-1]),flush=True)
 
     delta=(2*buy["BTCUSDT"]-vol["BTCUSDT"])/vol["BTCUSDT"].replace(0,np.nan)
@@ -282,6 +286,8 @@ def main():
 
     diagnostics={
         "loaded_symbols":len(loaded),
+        "duplicate_symbol_file_count":len(duplicate_symbols),
+        "duplicate_symbol_names":sorted(set(duplicate_symbols)),
         "btc_delta_fraction_finite":int(delta.notna().sum()),
         "btc_z_finite":int(z.notna().sum()),
         "btc_z_oos_finite":int(z.loc[HOLDOUT:].notna().sum()),
