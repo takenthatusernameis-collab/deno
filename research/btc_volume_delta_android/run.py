@@ -192,6 +192,7 @@ def main():
         p=Path(snapshot)/"BTCUSDT/BTCUSDT_4h.parquet"
         raw=pd.read_parquet(p)
         raw_idx=pd.to_datetime(raw["open_time"],utc=True)
+        idx=pd.date_range(START,END,freq=FREQ,inclusive="left")
         diag={
             "path":str(p),"shape":[int(x) for x in raw.shape],
             "columns":list(raw.columns),"dtypes":{c:str(raw[c].dtype) for c in raw.columns},
