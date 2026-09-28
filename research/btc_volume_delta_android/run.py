@@ -219,7 +219,7 @@ def main():
     pp_ret=predictive(prior_z(cl["BTCUSDT"].pct_change()),op[alt],cl[alt],low,high,1.0,-1.0,"btc_return_only")
     rng=np.random.default_rng(20260928)
     sh=z.copy(); valid=sh.notna()
-    sh.loc[valid]=rng.permutation(sh.loc[valid].values)
+    sh.loc[valid]=rng.permutation(sh.loc[valid].to_numpy(copy=True))
     pp_sh=predictive(sh,op[alt],cl[alt],low,high,1.0,-1.0,"shuffled_delta")
     rt=z.copy(); vals=rt.loc[valid].values
     if len(vals): rt.loc[valid]=np.roll(vals,min(777,len(vals)-1))
