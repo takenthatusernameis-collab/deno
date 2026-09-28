@@ -89,7 +89,7 @@ def predictive(feature,op,cl,low,high,pos_cut,neg_cut,name):
             d=cs_mean(fw,mask)
             sig=feature.reindex(d.index)
             for side,cond in (("positive",sig>=pos_cut),("negative",sig<=neg_cut)):
-                y=d.where(cond).dropna()
+                y=d.loc[cond.fillna(False)].dropna()
                 t,p=hac_mean_test(y.values)
                 pooled=fw.where(mask).loc[y.index]
                 rows.append({
@@ -101,8 +101,8 @@ def predictive(feature,op,cl,low,high,pos_cut,neg_cut,name):
                     "std_forward_return":float(y.std(ddof=1)) if len(y)>1 else np.nan,
                     "hit_rate":float((y>0).mean()) if len(y) else np.nan,
                     "hac_t":t,"hac_p":p})
-            pos=d.where(sig>=pos_cut).dropna()
-            neg=d.where(sig<=neg_cut).dropna()
+            pos=d.loc[(sig>=pos_cut).fillna(False)].dropna()
+            neg=d.loc[(sig<=neg_cut).fillna(False)].dropna()
             idx=pos.index.union(neg.index)
             pooled=fw.where(mask).loc[idx]
             rows.append({
