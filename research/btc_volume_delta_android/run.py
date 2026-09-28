@@ -270,6 +270,8 @@ def main():
     print(json.dumps(log[-1]),flush=True)
 
     delta=(2*buy["BTCUSDT"]-vol["BTCUSDT"])/vol["BTCUSDT"].replace(0,np.nan)
+    if not isinstance(delta,pd.Series):
+        raise RuntimeError(f"BTC delta must be a Series; got {type(delta).__name__} with columns={getattr(delta,'columns',None)}")
     z=prior_z(delta); pct=prior_pct(delta)
     alt=[s for s in cl.columns if s!="BTCUSDT"]
     _,_,_,low,high=masks(cl[alt],vol[alt])
