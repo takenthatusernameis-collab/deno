@@ -1,0 +1,66 @@
+
+name: Android BTC Volume Delta Research
+
+on:
+  push:
+    branches:
+      - chatgpt/btc-volume-delta-run
+    paths-ignore:
+      - research/btc_volume_delta_android/artifacts/**
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-btc-volume-delta
+  cancel-in-progress: true
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout research runner only
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            research/btc_volume_delta_android
+          sparse-checkout-cone-mode: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install research dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "vectorbt==1.1.0" "pyarrow>=19,<24" "huggingface_hub>=0.30" "scipy>=1.14"
+
+      - name: Run real-data OOS research
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: python research/btc_volume_delta_android/run.py
+
+      - name: Print compact result
+        run: |
+          python - <<'PY'
+          import json
+          p="research/btc_volume_delta_android/artifacts/summary.json"
+          print(json.dumps(json.load(open(p)), indent=2))
+          PY
+
+      - name: Persist compact research artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/btc_volume_delta_android/artifacts
+          if git diff --cached --quiet; then
+            echo "No artifact changes to commit."
+          else
+            git commit -m "Record BTC volume delta research results"
+            git push origin HEAD:chatgpt/btc-volume-delta-run
+          fi
