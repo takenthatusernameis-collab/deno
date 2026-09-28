@@ -241,8 +241,22 @@ def main():
         except Exception as e:
             log.append({"stage":"load_warning","symbol":s,"error":repr(e)})
     if "BTCUSDT" not in loaded: raise RuntimeError("BTCUSDT unavailable")
-    op=pd.DataFrame(opens,index=idx); cl=pd.DataFrame(closes,index=idx)
-    vol=pd.DataFrame(vols,index=idx); buy=pd.DataFrame(buys,index=idx)
+    op=pd.DataFrame(
+        np.column_stack([opens[s].to_numpy(copy=False) for s in loaded]),
+        index=idx, columns=loaded,
+    )
+    cl=pd.DataFrame(
+        np.column_stack([closes[s].to_numpy(copy=False) for s in loaded]),
+        index=idx, columns=loaded,
+    )
+    vol=pd.DataFrame(
+        np.column_stack([vols[s].to_numpy(copy=False) for s in loaded]),
+        index=idx, columns=loaded,
+    )
+    buy=pd.DataFrame(
+        np.column_stack([buys[s].to_numpy(copy=False) for s in loaded]),
+        index=idx, columns=loaded,
+    )
     log.append({"stage":"load","loaded_symbols":len(loaded)})
     print(json.dumps(log[-1]),flush=True)
 
